@@ -1,0 +1,60 @@
+DROP TABLE IF EXISTS mrr_products;
+create table mrr_products (
+entity varchar(255),
+category varchar(255),
+product_number varchar(255),
+product_name varchar(255),
+product_desc varchar(255),
+type varchar(255),
+type_name varchar(255),
+variants int,
+colors varchar(255),
+price real,
+prev_price real,
+units varchar(255),
+url varchar(255),
+tag varchar(255),
+online_sell boolean,
+last_chance boolean,
+availability varchar(255),
+is_breath_taking boolean, 
+created date);
+
+DROP TABLE IF EXISTS products;
+create table products (
+product_number varchar(255),
+product_name varchar(255),
+product_desc varchar(255),
+type_name varchar(255),
+colors varchar(255),
+price real,
+prev_price real,
+units varchar(255),
+url varchar(255),
+online_sell boolean,
+last_chance boolean,
+availability varchar(255),
+is_breath_taking boolean, 
+created date);
+
+DROP TABLE IF EXISTS mrr_sales
+create table mrr_sales (
+category varchar(255),
+product_number varchar(255),
+product_name varchar(255),
+product_desc varchar(255),
+type varchar(255),
+type_name varchar(255),
+variants int,
+colors varchar(255),
+price real,
+prev_price real,
+units varchar(255),
+url varchar(255),
+image_url varchar(255), 
+tag varchar(255),
+online_sell boolean,
+last_chance boolean,
+availability varchar(255),
+is_breath_taking boolean, 
+created date);

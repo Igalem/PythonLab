@@ -1,0 +1,1 @@
+delete from mrr_products where created = current_date;

@@ -1,0 +1,1 @@
+[{"data":"Ashkelon - North","date":"07.10.2023","time":"20:00:46","alertDate":"2023-10-07T20:01:00","category":1,"category_desc":"Missiles","matrix_id":1,"rid":20310,"NAME_HE":"אשקלון - צפון","NAME_EN":"Ashkelon - North","NAME_AR":"أشكلون - الشمال","NAME_RU":"Ашкелон - Север"}]
