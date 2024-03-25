@@ -2,9 +2,9 @@ from google.cloud import bigquery
 
 client = bigquery.Client()
 
-PROJECT_ID = "xxxxx"
-DATASET_ID = "xxxxx"
-TABLE_ID = "xxxxx"
+PROJECT_ID = "xxxxxxx"
+DATASET_ID = "xxxxxxx"
+TABLE_ID = "xxxxxxx"
 
 dataset = f"{PROJECT_ID}.{DATASET_ID}.{TABLE_ID}"
 
