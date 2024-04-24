@@ -1,13 +1,17 @@
 import requests
 import pandas as pd
-import numpy as np
 import base64
 import logging
 from google.cloud import bigquery
 from config.jira_fields_list_dict import *
 
+PROJECT_ID = 'tangome-staging'
 
-jira_cred = {"api_token": "XXXXX", "username": "XXXXX", "jira_url": "XXXXX"}
+JIRA_SERVER = 'XXXXX'
+USERNAME = 'XXXXX'
+PASSWORD = 'XXXXX'
+
+jira_cred = {"api_token": PASSWORD, "username": USERNAME, "jira_url": JIRA_SERVER}
 username = jira_cred['username']
 api_token = jira_cred['api_token']
 jira_url = jira_cred['jira_url']
@@ -16,10 +20,11 @@ URL = f"{jira_url}/rest/api/2/search"
 
 credentials = f"{username}:{api_token}"
 base64_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
-# JIRA_QUERY = "updated >= -1d" ## and issuetype in ('Production incident','ANR','Crash','Defect','Memory leak','Bug')"
-JIRA_QUERY = "issue = 'OPS-24989'"
+# JIRA_QUERY = "updated >= -4d and issuetype in ('Production incident','ANR','Crash','Defect','Memory leak','Bug')"
+# JIRA_QUERY = "issue = 'CORPIT-21353'"
+JIRA_QUERY = "created >= '2024-04-01'"
 
-table_full_name = 'XXXXX.mrr.jira_incident_bug'
+table_full_name = f"{PROJECT_ID}.mrr.jira_issues"
 
 headers = {
         "Content-Type": "application/json",
@@ -70,8 +75,8 @@ def get_issue_keys(data):
             issue_keys.append(item['inwardIssue']['key'])
     return issue_keys
 
-def fn_load_to_bigquery(df, table_full_name, bigquery_table_schema=None):
-    bq_client = bigquery.Client()
+def fn_load_to_bigquery(df, table_full_name, bigquery_table_schema=None, project_id=PROJECT_ID):
+    bq_client = bigquery.Client(project=project_id)
     job_config = bigquery.LoadJobConfig(
         # schema=bigquery_table_schema,
         write_disposition="WRITE_TRUNCATE"
@@ -116,15 +121,21 @@ while True:
         row_data['issue'] = issue_key
         row_data['url'] = issue_url
 
-        fields = issue['fields']
+        fields = jira_fields
+        issue_fields = issue['fields']
 
         for field_name in fields:
+            if '__' in field_name:
+                jira_field_name = str(field_name.split('__')[0])
+            else:
+                jira_field_name = field_name
+
             field_key = jira_fields_list[field_name]
 
             if field_name == 'issuelinks':
-                field_values = get_issue_keys(fields[field_name])
+                field_values = get_issue_keys(issue_fields[field_name])
             else:
-                field_values = get_field_values(row=fields, field_name=field_name, field_key=field_key)
+                field_values = get_field_values(row=issue_fields, field_name=jira_field_name, field_key=field_key)
 
             #--------------------------------------------
             # print(field_name, type(field_values))

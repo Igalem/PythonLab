@@ -32,7 +32,12 @@ jira_fields_list = {
     'customfield_10202': 'value',  ## High level Side
     'customfield_10090': 'value', ## Test Phase
     'customfield_10020': 'name',  ## Sprint
-    'customfield_10026': None
+    'customfield_10026': None,  ## Story Points
+    'assignee__email': 'emailAddress',
+    'creator__email': 'emailAddress',
+    'reporter__email': 'emailAddress',
+    'customfield_10200': None
+
 }
 
 jira_mapping_fields = {
@@ -69,7 +74,11 @@ jira_mapping_fields = {
     'customfield_10202': 'high_level_side',
     'customfield_10090': 'test_phase',
     'customfield_10020': 'sprint',
-    'customfield_10026': 'story_points'
+    'customfield_10026': 'story_points',
+    'creator__email': 'creator_email',    
+    'assignee__email': 'assignee_email',
+    'reporter__email': 'reporter_email',
+    'customfield_10200': 'lost_money'
 }
 
 

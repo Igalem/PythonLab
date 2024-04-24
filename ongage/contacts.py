@@ -2,6 +2,7 @@ import time
 import logging
 import requests
 import pandas as pd
+import tempfile
 from google.cloud import bigquery
 
 
@@ -18,7 +19,7 @@ HEADERS = {
 }
 
 START_AT = 0
-MAX_RESULTS = 10000
+MAX_RESULTS = 50000
 
 def generate_cm_report(headers=HEADERS):
     payload = {
@@ -83,14 +84,17 @@ def fetch_cm_report(report_id, headers=HEADERS, start_at=START_AT, max_results=M
 def delete_cm_report(report_id=None, headers=HEADERS):
   url = f"https://api.ongage.net/214528/api/contact_search/{report_id}"
   response = requests.delete(url, headers=headers)
+  return response
 
 
 def create_df(data):
   df = pd.DataFrame(data)
   return df
 
+
+
 def load_to_bq(df, table_id):
-    bq_client = bigquery.Client()
+    bq_client = bigquery.Client(project='tangome-staging')
     job_config = bigquery.LoadJobConfig(
         write_disposition="WRITE_TRUNCATE"
     )
@@ -111,10 +115,13 @@ if __name__ == '__main__':
   # exporting onGage contacts report
   report_id = generate_cm_report()
   check_cm_report_status(report_id=report_id)
+
+  # report_id = 2131119914
   contacts_data = fetch_cm_report(report_id=report_id)
-  df = create_df(contacts_data)
-  delete_cm_report(report_id=report_id)
   
-  # load df to bigQuery
-  table_id = 'XXXXX.mrr.ongage_contacts'
+  df = create_df(contacts_data)
+  # delete_cm_report(report_id=report_id)
+  
+  # # load df to bigQuery
+  table_id = 'tangome-staging.ods.ongage_contacts'
   load_to_bq(df=df, table_id=table_id)
